@@ -19,10 +19,6 @@ app.use((req, res, next) => {
 })
 app.use(express.json())
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
 app.use('/api/auth', require('./Routes/Auth'))
 
 app.listen(port, () => {

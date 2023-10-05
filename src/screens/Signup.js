@@ -6,38 +6,10 @@ export default function Signup() {
     name: '',
     email: '',
     password: '',
-    geolocation: '',
+    address: '',
   })
-  let [address, setAddress] = useState('')
-  let navigate = useNavigate()
 
-  const handleClick = async (e) => {
-    e.preventDefault()
-    let navLocation = () => {
-      return new Promise((res, rej) => {
-        navigator.geolocation.getCurrentPosition(res, rej)
-      })
-    }
-    let latlong = await navLocation().then((res) => {
-      let latitude = res.coords.latitude
-      let longitude = res.coords.longitude
-      return [latitude, longitude]
-    })
-    // console.log(latlong)
-    let [lat, long] = latlong
-    console.log(lat, long)
-    const response = await fetch('http://localhost:5000/api/auth/getlocation', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ latlong: { lat, long } }),
-    })
-    const { location } = await response.json()
-    console.log(location)
-    setAddress(location)
-    setCredentials({ ...credentials, [e.target.name]: location })
-  }
+  let navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -52,7 +24,7 @@ export default function Signup() {
         name: credentials.name,
         email: credentials.email,
         password: credentials.password,
-        location: credentials.geolocation,
+        location: credentials.address,
       }),
     })
     const json = await response.json()
@@ -73,8 +45,7 @@ export default function Signup() {
   return (
     <div
       style={{
-        backgroundImage:
-          'url("https://images.pexels.com/photos/1565982/pexels-photo-1565982.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")',
+        backgroundImage: 'public/signupimage.jpeg',
         backgroundSize: 'cover',
         height: '100vh',
       }}
@@ -123,23 +94,13 @@ export default function Signup() {
                 type='text'
                 className='form-control'
                 name='address'
-                placeholder='"Click below for fetching address"'
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
+                value={credentials.address}
+                onChange={onChange}
                 aria-describedby='emailHelp'
               />
             </fieldset>
           </div>
-          <div className='m-3'>
-            <button
-              type='button'
-              onClick={handleClick}
-              name='geolocation'
-              className=' btn btn-success'
-            >
-              Click for current Location{' '}
-            </button>
-          </div>
+
           <div className='m-3'>
             <label htmlFor='exampleInputPassword1' className='form-label'>
               Password
